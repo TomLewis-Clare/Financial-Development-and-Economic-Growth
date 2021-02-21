@@ -10,10 +10,10 @@ This paper examines whether the growth-enhancing view of financial development p
 
 <h4 align="center"> Contents </h4>  
 
-* Section 1) The theory behind the relationship between financial development and economic growth   
-* Section 2) A review of past literature  
-* Section 3) Econometric method for cross-sectional data and panel data  
-* Section 4) Results  
+* Section 1) *The theory behind the relationship between financial development and economic growth*   
+* Section 2) *A review of past literature*  
+* Section 3) *Econometric method for cross-sectional data and panel data*  
+* Section 4) *Results*  
 * Appendix  
 * Bibliography  
 * Data Sources  
