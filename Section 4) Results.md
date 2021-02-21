@@ -23,10 +23,18 @@ Next, it is important to examine how closely related the distribution of the leg
 | **PRIVY**| 63      | 45.35725| 36.14035    | 3.36133  | 167.738 |
 
 A final check employed is on the level of variation in the data, which is displayed by the table 1 (summary statistics). There is large variation across countries in terms of both financial development and growth. For example, in terms of the financial sector size, LLY is below 20% of GDP for developing African countries such as Niger, Cameroon and Ghana, whilst for more developed countries such as Japan and Switzerland, LLY is above 100% of GDP.  This variation in the dataset may provide sufficient evidence to support the random sampling assumption of linear models as it shows how the data is truly representative of the global population of countries (Wooldridge, 2013, p. 59). The validity of these linear model assumptions will lend support to the unbiasedness of the regression estimator in each of the three regressions.  
- 
-# Table 2 - Financial development and economic growth: cross-section regressions, 1980-2009.
-##### Dependent variable: Real average per capita GDP growth, 1980-2009. Instrumental variable: legal origin. *, **, *** mean statistically significant at the 10%,5% and 1% level respectively
 
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/79361165/108627539-067c1b80-744e-11eb-8e49-a44ae254144e.JPG">
+</p>
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/79361165/108627539-067c1b80-744e-11eb-8e49-a44ae254144e.JPG">
+</p>
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/79361165/108627539-067c1b80-744e-11eb-8e49-a44ae254144e.JPG">
+</p>
 
 The cross-sectional results reported in table 2 indicate weak support for any significant connection between the exogenous component of financial development and economic growth (shown by the insignificance reported by the p values). To fully encapsulate the meaning of the insignificance reported between financial development and growth, a closer inspection of the coefficients is required. For example: the coefficient on PRIVY for the policy conditioning set shows that, when all controlled variables are held constant, a 1% increase in PRIVY will lead to a 0.2% increase in growth. But upon closer inspection, the coefficients show that when a country moves from the average PRIVY for low income countries (12.7% of GDP) to the average PRIVY for high income countries (74.8% of GDP), they would only yield 1.2% increase in growth. This is a small payoff considering the monumental required increase in PRIVY of 62.1% of GDP needed, proving the insignificance of the relationship reported in table 2.  
 
