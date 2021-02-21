@@ -1,4 +1,4 @@
-<h4 align="center"> Section 1: The theory behind the relationship between financial development and economic growth </h4> 
+<h1 align="center"> Section 1: The theory behind the relationship between financial development and economic growth </h1> 
 <hr />  
 
 The theories put forward by Pagano’s ‘AK’ model and Levine’s ‘functional approach’ describe how financial development can accelerate growth.  Pagano’s ‘AK’ model can be used to briefly explain the theory behind the positive impact of financial development on economic growth (Pagano, 1993), but Levine’s ‘functional approach’ gives a more detailed understanding of relationship between the financial structures and functioning of the financial system in the economy, and thus better describes how financial development can fuel economic growth (Levine, 1997).  
