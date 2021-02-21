@@ -1,6 +1,8 @@
-<h1 align="centre"> Financial-Development-and-Economic-Growth </h1>
+npm install markdown-magic --save-dev
 
-### An examination of the growth-enhancing view of financial development using real world data ###
+<h1 align="center"> Financial-Development-and-Economic-Growth </h1>
+
+<h3 align="center"> An examination of the growth-enhancing view of financial development using real world data </h3>
 <hr />
 
-<span style="color:red; font-family:Georgia; text-align:center; font-size:2em;"> Abstract </span>
+<h4 align="center"> Abstract </h4>
