@@ -29,7 +29,7 @@ A final check employed is on the level of variation in the data, which is displa
 </p>
 
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/79361165/108627539-067c1b80-744e-11eb-8e49-a44ae254144e.JPG">
+  <img src="https://user-images.githubusercontent.com/79361165/108627586-578c0f80-744e-11eb-95b2-23c6c7356114.JPG">
 </p>
 
 <p align="center">
