@@ -1,4 +1,6 @@
-![Bristol university logo](https://user-images.githubusercontent.com/79361165/108625347-58b73f80-7442-11eb-804c-b69d892e729e.jpg)
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/79361165/108625347-58b73f80-7442-11eb-804c-b69d892e729e.jpg">
+</p>
 
 <h1 align="center"> Financial-Development-and-Economic-Growth </h1>
 
