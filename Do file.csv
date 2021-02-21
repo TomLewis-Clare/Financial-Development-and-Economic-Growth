@@ -1,0 +1,197 @@
+net set ado o:/AppliedEconomicsDissertation
+ssc install egenmore
+log using "O:\AppliedEconomicsDissertation\Section 3 A/log.log", replace
+use "O:\AppliedEconomicsDissertation\Section 3 A\Data\balancedpaneldataupdated.dta"
+bysort countryid: gen gyp=((gdppc_usd05[_n]-gdppc_usd05[_n-1])/gdppc_usd05[_n-1])*100
+bysort countryid: gen loginitialincome=ln(gdppc_1980 )
+bysort countryid: gen loginitialschooling=ln(ss_total_1980 )
+collapse (mean) gyp bank lly privy grosscap_gdp trade_gdp inflation govexp_gdp loginitialincome loginitialschooling, by(countryid)
+import excel "O:\AppliedEconomicsDissertation\Section 3 A\Data\Cross-sectional dataset with legal origins.xlsx", sheet("Sheet1") firstrow clear
+xi: ivregress 2sls gyp (bank = leg_british leg_french leg_german leg_scandinavian) loginitialincome loginitialschooling, rob
+estat overid
+xi: ivregress 2sls gyp (lly = leg_british leg_french leg_german leg_scandinavian) loginitialincome loginitialschooling, rob
+estat overid
+xi: ivregress 2sls gyp (privy = leg_british leg_french leg_german leg_scandinavian) loginitialincome loginitialschooling, rob
+estat overid
+xi: ivregress 2sls gyp (bank = leg_british leg_french leg_german leg_scandinavian) loginitialincome loginitialschooling govexp_gdp inflation trade_gdp, rob
+estat overid
+xi: ivregress 2sls gyp (lly = leg_british leg_french leg_german leg_scandinavian) loginitialincome loginitialschooling govexp_gdp inflation trade_gdp, rob
+estat overid
+xi: ivregress 2sls gyp (privy = leg_british leg_french leg_german leg_scandinavian) loginitialincome loginitialschooling govexp_gdp inflation trade_gdp, rob
+estat overid
+clear
+use "O:\AppliedEconomicsDissertation\Section 3 A\Data\balancedpaneldataupdated.dta"
+bysort countryid: gen loginitialincome=ln(gdppc_1980 )
+bysort countryid: gen loginitialschooling=ln(ss_total_1980 )
+egen countryid_n = group(countryid)
+xtset countryid_n year
+bysort countryid_n : gen dgrowthrate_fd=d.growthrate
+bysort countryid_n : gen dbank_fd=d.bank
+bysort countryid_n : gen dlly_fd=d.lly
+bysort countryid_n : gen dprivy_fd=d.privy
+bysort countryid_n : gen dgovexp_gdp_fd=d.govexp_gdp
+bysort countryid_n : gen dinflation_fd=d.inflation
+bysort countryid_n : gen dtrade_gdp_fd=d.trade_gdp
+bysort countryid_n : gen bank_lag = bank[_n-2]
+bysort countryid_n : gen lly_lag = lly[_n-2]
+bysort countryid_n : gen privy_lag = privy[_n-2]
+bysort countryid_n : gen govexp_gdp_lag = govexp_gdp[_n-2]
+bysort countryid_n : gen inflation_lag = inflation[_n-2]
+bysort countryid_n : gen trade_gdp_lag = trade_gdp[_n-2]
+xi: xtivreg dgrowthrate_fd (dbank_fd = bank_lag) i.year, vce(robust)
+xi: xtivreg dgrowthrate_fd (dlly_fd = lly_lag) i.year, vce(robust)
+xi: xtivreg dgrowthrate_fd (dprivy_fd = privy_lag) i.year, vce(robust)
+xi: xtivreg dgrowthrate_fd (dbank_fd dgovexp_gdp_fd dinflation_fd dtrade_gdp_fd = bank_lag govexp_gdp_lag inflation_lag trade_gdp_lag) i.year, vce(robust)
+xi: xtivreg dgrowthrate_fd (dlly_fd dgovexp_gdp_fd dinflation_fd dtrade_gdp_fd = lly_lag govexp_gdp_lag inflation_lag trade_gdp_lag) i.year, vce(robust)
+xi: xtivreg dgrowthrate_fd (dprivy_fd dgovexp_gdp_fd dinflation_fd dtrade_gdp_fd = privy_lag govexp_gdp_lag inflation_lag trade_gdp_lag) i.year, vce(robust)
+bysort countryid_n : gen bank_lag_diff = bank[_n-1] - bank[_n-2]
+bysort countryid_n : gen lly_lag_diff = lly[_n-1] - lly[_n-2]
+bysort countryid_n : gen privy_lag_diff = privy[_n-1] - privy[_n-2]
+bysort countryid_n : gen govexp_gdp_lag_diff = govexp_gdp[_n-1] - govexp_gdp[_n-2]
+bysort countryid_n : gen inflation_lag_diff = inflation[_n-1] - inflation[_n-2]
+bysort countryid_n : gen trade_gdp_lag_diff = trade_gdp[_n-1] - trade_gdp[_n-2]
+xi: xtivreg growthrate (bank = bank_lag_diff) i.year i.countryid_n, vce(robust)
+xi: xtivreg growthrate (lly = lly_lag_diff) i.year i.countryid_n, vce(robust)
+xi: xtivreg growthrate (privy = privy_lag_diff) i.year i.countryid_n, vce(robust)
+xi: xtivreg growthrate (bank govexp_gdp inflation trade_gdp = bank_lag_diff govexp_gdp_lag_diff inflation_lag_diff trade_gdp_lag_diff) i.year i.countryid_n, vce(robust)
+xi: xtivreg growthrate (lly govexp_gdp inflation trade_gdp = lly_lag_diff govexp_gdp_lag_diff inflation_lag_diff trade_gdp_lag_diff) i.year i.countryid_n, vce(robust)
+xi: xtivreg growthrate (privy govexp_gdp inflation trade_gdp = privy_lag_diff govexp_gdp_lag_diff inflation_lag_diff trade_gdp_lag_diff) i.year i.countryid_n, vce(robust)
+clear
+
+
+import excel "O:\AppliedEconomicsDissertation\Section 3 A\Data\Cross-sectional dataset with legal origins sensitivity check.xlsx", sheet("Sheet1") firstrow clear
+xi: ivregress 2sls gyp (depst_gdp = leg_british leg_french leg_german leg_scandinavian) loginitialincome loginitialschooling govexp_gdp inflation trade_gdp, rob
+xi: ivregress 2sls gyp (privdepst_gdp = leg_british leg_french leg_german leg_scandinavian) loginitialincome loginitialschooling govexp_gdp inflation trade_gdp, rob
+xi: ivregress 2sls gyp (findepst_gdp = leg_british leg_french leg_german leg_scandinavian) loginitialincome loginitialschooling govexp_gdp inflation trade_gdp, rob
+clear
+use "O:\AppliedEconomicsDissertation\Section 3 A\Data\balancedpaneldataupdated.dta" 
+bysort countryid: gen loginitialincome=ln(gdppc_1980 )
+bysort countryid: gen loginitialschooling=ln(ss_total_1980 )
+egen countryid_n = group(countryid)
+xtset countryid_n year
+bysort countryid_n : gen dgrowthrate_fd=d.growthrate
+bysort countryid_n : gen dbank_fd=d.bank
+bysort countryid_n : gen dlly_fd=d.lly
+bysort countryid_n : gen dprivy_fd=d.privy
+bysort countryid_n : gen dgovexp_gdp_fd=d.govexp_gdp
+bysort countryid_n : gen dinflation_fd=d.inflation
+bysort countryid_n : gen dtrade_gdp_fd=d.trade_gdp
+bysort countryid_n : gen ddepst_gdp_fd=d.depst_gdp
+bysort countryid_n : gen dprivdepst_gdp_fd=d.privdepst_gdp
+bysort countryid_n : gen dfindepst_gdp_fd=d.findepst_gdp
+bysort countryid_n : gen bank_lag = bank[_n-1]
+bysort countryid_n : gen lly_lag = lly[_n-1]
+bysort countryid_n : gen privy_lag = privy[_n-1]
+bysort countryid_n : gen govexp_gdp_lag = govexp_gdp[_n-1]
+bysort countryid_n : gen inflation_lag = inflation[_n-1]
+bysort countryid_n : gen trade_gdp_lag = trade_gdp[_n-1]
+bysort countryid_n : gen depst_gdp_lag = depst_gdp[_n-1]
+bysort countryid_n : gen privdepst_gdp_lag = privdepst_gdp[_n-1]
+bysort countryid_n : gen findepst_gdp_lag = findepst_gdp[_n-1]
+xi: xtivreg dgrowthrate_fd (ddepst_gdp_fd dgovexp_gdp_fd dinflation_fd dtrade_gdp_fd = depst_gdp_lag govexp_gdp_lag inflation_lag trade_gdp_lag depst_gdp_lag) i.year, vce(robust)
+xi: xtivreg dgrowthrate_fd (dprivdepst_gdp_fd dgovexp_gdp_fd dinflation_fd dtrade_gdp_fd = privdepst_gdp_lag govexp_gdp_lag inflation_lag trade_gdp_lag) i.year, vce(robust)
+xi: xtivreg dgrowthrate_fd (dfindepst_gdp_fd dgovexp_gdp_fd dinflation_fd dtrade_gdp_fd = findepst_gdp_lag govexp_gdp_lag inflation_lag trade_gdp_lag) i.year, vce(robust)
+clear
+use "O:\AppliedEconomicsDissertation\Section 3 A\Data\balancedpaneldataupdated.dta" 
+bysort countryid: gen loginitialincome=ln(gdppc_1980 )
+bysort countryid: gen loginitialschooling=ln(ss_total_1980 )
+egen countryid_n = group(countryid)
+xtset countryid_n year
+bysort countryid_n : gen govexp_gdp_lag_diff = govexp_gdp[_n-1] - govexp_gdp[_n-2]
+bysort countryid_n : gen inflation_lag_diff = inflation[_n-1] - inflation[_n-2]
+bysort countryid_n : gen trade_gdp_lag_diff = trade_gdp[_n-1] - trade_gdp[_n-2]
+bysort countryid_n : gen depst_gdp_lag_diff = depst_gdp[_n-1] - depst_gdp[_n-2]
+bysort countryid_n : gen privdepst_gdp_lag_diff = privdepst_gdp[_n-1] - privdepst_gdp[_n-2]
+bysort countryid_n : gen findepst_gdp_lag_diff = findepst_gdp[_n-1] - findepst_gdp[_n-2]
+xi: xtivreg growthrate (depst_gdp govexp_gdp inflation trade_gdp = depst_gdp_lag_diff govexp_gdp_lag_diff inflation_lag_diff trade_gdp_lag_diff) i.year i.countryid_n, vce(robust)
+xi: xtivreg growthrate (privdepst_gdp govexp_gdp inflation trade_gdp = privdepst_gdp_lag_diff govexp_gdp_lag_diff inflation_lag_diff trade_gdp_lag_diff) i.year i.countryid_n, vce(robust)
+xi: xtivreg growthrate (findepst_gdp govexp_gdp inflation trade_gdp = findepst_gdp_lag_diff govexp_gdp_lag_diff inflation_lag_diff trade_gdp_lag_diff) i.year i.countryid_n, vce(robust)
+clear
+import excel "O:\AppliedEconomicsDissertation\Section 3 A\Data\Cross-sectional dataset with legal origins high income OECD only.xlsx", sheet("Sheet2") firstrow clear
+xi: ivregress 2sls gyp (bank = leg_british leg_french leg_german leg_scandinavian) loginitialincome loginitialschooling govexp_gdp inflation trade_gdp, rob
+xi: ivregress 2sls gyp (lly = leg_british leg_french leg_german leg_scandinavian) loginitialincome loginitialschooling govexp_gdp inflation trade_gdp, rob
+xi: ivregress 2sls gyp (privy = leg_british leg_french leg_german leg_scandinavian) loginitialincome loginitialschooling govexp_gdp inflation trade_gdp, rob
+import excel "O:\AppliedEconomicsDissertation\Section 3 A\Data\Panel data high income OECD only.xlsx", sheet("Sheet2") firstrow clear
+xtset countryid_n year
+bysort countryid_n : gen dgrowthrate_fd=d.growthrate
+bysort countryid_n : gen dbank_fd=d.bank
+bysort countryid_n : gen dlly_fd=d.lly
+bysort countryid_n : gen dprivy_fd=d.privy
+bysort countryid_n : gen dgovexp_gdp_fd=d.govexp_gdp
+bysort countryid_n : gen dinflation_fd=d.inflation
+bysort countryid_n : gen dtrade_gdp_fd=d.trade_gdp
+bysort countryid_n : gen bank_lag = bank[_n-2]
+bysort countryid_n : gen lly_lag = lly[_n-2]
+bysort countryid_n : gen privy_lag = privy[_n-2]
+bysort countryid_n : gen govexp_gdp_lag = govexp_gdp[_n-2]
+bysort countryid_n : gen inflation_lag = inflation[_n-2]
+bysort countryid_n : gen trade_gdp_lag = trade_gdp[_n-2]
+xi: xtivreg dgrowthrate_fd (dbank_fd dgovexp_gdp_fd dinflation_fd dtrade_gdp_fd = bank_lag govexp_gdp_lag inflation_lag trade_gdp_lag) i.year, vce(robust)
+xi: xtivreg dgrowthrate_fd (dlly_fd dgovexp_gdp_fd dinflation_fd dtrade_gdp_fd = lly_lag govexp_gdp_lag inflation_lag trade_gdp_lag) i.year, vce(robust)
+xi: xtivreg dgrowthrate_fd (dprivy_fd dgovexp_gdp_fd dinflation_fd dtrade_gdp_fd = privy_lag govexp_gdp_lag inflation_lag trade_gdp_lag) i.year, vce(robust)
+import excel "O:\AppliedEconomicsDissertation\Section 3 A\Data\Panel data high income OECD only.xlsx", sheet("Sheet2") firstrow clear
+xtset countryid_n year
+bysort countryid_n : gen bank_lag_diff = bank[_n-1] - bank[_n-2]
+bysort countryid_n : gen lly_lag_diff = lly[_n-1] - lly[_n-2]
+bysort countryid_n : gen privy_lag_diff = privy[_n-1] - privy[_n-2]
+bysort countryid_n : gen govexp_gdp_lag_diff = govexp_gdp[_n-1] - govexp_gdp[_n-2]
+bysort countryid_n : gen inflation_lag_diff = inflation[_n-1] - inflation[_n-2]
+bysort countryid_n : gen trade_gdp_lag_diff = trade_gdp[_n-1] - trade_gdp[_n-2]
+xi: xtivreg growthrate (bank govexp_gdp inflation trade_gdp = bank_lag_diff govexp_gdp_lag_diff inflation_lag_diff trade_gdp_lag_diff) i.year i.countryid_n, vce(robust)
+xi: xtivreg growthrate (lly govexp_gdp inflation trade_gdp = lly_lag_diff govexp_gdp_lag_diff inflation_lag_diff trade_gdp_lag_diff) i.year i.countryid_n, vce(robust)
+xi: xtivreg growthrate (privy govexp_gdp inflation trade_gdp = privy_lag_diff govexp_gdp_lag_diff inflation_lag_diff trade_gdp_lag_diff) i.year i.countryid_n, vce(robust)
+clear
+import excel "O:\AppliedEconomicsDissertation\Section 3 A\Data\Cross-sectional dataset with legal origins.xlsx", sheet("Sheet1") firstrow clear
+xi: ivregress 2sls gyp (privy = leg_british leg_french leg_german leg_scandinavian) loginitialincome loginitialschooling govexp_gdp inflation trade_gdp, rob
+generate outlier_countries = countryid if countryid == "Korea, Rep." | countryid=="Niger" | countryid =="Côte d'Ivoire" | countryid=="Saudi Arabia" | countryid =="South Africa" |countryid=="Switzerland" | countryid=="Japan"
+scatter gyp privy, mlabel(outlier_countries) || lfit gyp privy
+clear
+import excel "O:\AppliedEconomicsDissertation\Section 3 A\Data\Cross-sectional dataset with legal origins outliers check.xlsx", sheet("Sheet1") firstrow clear
+xi: ivregress 2sls gyp (bank = leg_british leg_french leg_german leg_scandinavian) loginitialincome loginitialschooling govexp_gdp inflation trade_gdp, rob
+xi: ivregress 2sls gyp (lly = leg_british leg_french leg_german leg_scandinavian) loginitialincome loginitialschooling govexp_gdp inflation trade_gdp, rob
+xi: ivregress 2sls gyp (privy = leg_british leg_french leg_german leg_scandinavian) loginitialincome loginitialschooling govexp_gdp inflation trade_gdp, rob
+clear
+import excel "O:\AppliedEconomicsDissertation\Section 3 A\Data\Panel dataset outliers check.xlsx", sheet("Sheet1") firstrow clear
+xtset countryid_n year
+bysort countryid_n : gen dgrowthrate_fd=d.growthrate
+bysort countryid_n : gen dbank_fd=d.bank
+bysort countryid_n : gen dlly_fd=d.lly
+bysort countryid_n : gen dprivy_fd=d.privy
+bysort countryid_n : gen dgovexp_gdp_fd=d.govexp_gdp
+bysort countryid_n : gen dinflation_fd=d.inflation
+bysort countryid_n : gen dtrade_gdp_fd=d.trade_gdp
+bysort countryid_n : gen bank_lag = bank[_n-2]
+bysort countryid_n : gen lly_lag = lly[_n-2]
+bysort countryid_n : gen privy_lag = privy[_n-2]
+bysort countryid_n : gen govexp_gdp_lag = govexp_gdp[_n-2]
+bysort countryid_n : gen inflation_lag = inflation[_n-2]
+bysort countryid_n : gen trade_gdp_lag = trade_gdp[_n-2]
+xi: xtivreg dgrowthrate_fd (dbank_fd dgovexp_gdp_fd dinflation_fd dtrade_gdp_fd = bank_lag govexp_gdp_lag inflation_lag trade_gdp_lag) i.year, vce(robust)
+xi: xtivreg dgrowthrate_fd (dlly_fd dgovexp_gdp_fd dinflation_fd dtrade_gdp_fd = lly_lag govexp_gdp_lag inflation_lag trade_gdp_lag) i.year, vce(robust)
+xi: xtivreg dgrowthrate_fd (dprivy_fd dgovexp_gdp_fd dinflation_fd dtrade_gdp_fd = privy_lag govexp_gdp_lag inflation_lag trade_gdp_lag) i.year, vce(robust)
+clear
+import excel "O:\AppliedEconomicsDissertation\Section 3 A\Data\Panel dataset outliers check.xlsx", sheet("Sheet1") firstrow clear
+xtset countryid_n year
+bysort countryid_n : gen bank_lag_diff = bank[_n-1] - bank[_n-2]
+bysort countryid_n : gen lly_lag_diff = lly[_n-1] - lly[_n-2]
+bysort countryid_n : gen privy_lag_diff = privy[_n-1] - privy[_n-2]
+bysort countryid_n : gen govexp_gdp_lag_diff = govexp_gdp[_n-1] - govexp_gdp[_n-2]
+bysort countryid_n : gen inflation_lag_diff = inflation[_n-1] - inflation[_n-2]
+bysort countryid_n : gen trade_gdp_lag_diff = trade_gdp[_n-1] - trade_gdp[_n-2]
+xi: xtivreg growthrate (bank govexp_gdp inflation trade_gdp = bank_lag_diff govexp_gdp_lag_diff inflation_lag_diff trade_gdp_lag_diff) i.year i.countryid_n, vce(robust)
+xi: xtivreg growthrate (lly govexp_gdp inflation trade_gdp = lly_lag_diff govexp_gdp_lag_diff inflation_lag_diff trade_gdp_lag_diff) i.year i.countryid_n, vce(robust)
+xi: xtivreg growthrate (privy govexp_gdp inflation trade_gdp = privy_lag_diff govexp_gdp_lag_diff inflation_lag_diff trade_gdp_lag_diff) i.year i.countryid_n, vce(robust)
+clear
+import excel "O:\AppliedEconomicsDissertation\Section 3 A\Data\Panel dataset using GNP as a proxy for growth.xlsx", sheet("Sheet2") firstrow clear
+xtset countryid_n year
+bysort countryid_n : gen bank_lag_diff = bank[_n-1] - bank[_n-2]
+bysort countryid_n : gen lly_lag_diff = lly[_n-1] - lly[_n-2]
+bysort countryid_n : gen privy_lag_diff = privy[_n-1] - privy[_n-2]
+bysort countryid_n : gen govexp_gdp_lag_diff = govexp_gdp[_n-1] - govexp_gdp[_n-2]
+bysort countryid_n : gen inflation_lag_diff = inflation[_n-1] - inflation[_n-2]
+bysort countryid_n : gen trade_gdp_lag_diff = trade_gdp[_n-1] - trade_gdp[_n-2]
+xi: xtivreg growthrate (bank govexp_gdp inflation trade_gdp = bank_lag_diff govexp_gdp_lag_diff inflation_lag_diff trade_gdp_lag_diff) i.year i.countryid_n, vce(robust)
+xi: xtivreg growthrate (lly govexp_gdp inflation trade_gdp = lly_lag_diff govexp_gdp_lag_diff inflation_lag_diff trade_gdp_lag_diff) i.year i.countryid_n, vce(robust)
+xi: xtivreg growthrate (privy govexp_gdp inflation trade_gdp = privy_lag_diff govexp_gdp_lag_diff inflation_lag_diff trade_gdp_lag_diff) i.year i.countryid_n, vce(robust)
+clear
+log close
