@@ -1,3 +1,5 @@
+![Bristol university logo](https://user-images.githubusercontent.com/79361165/108625347-58b73f80-7442-11eb-804c-b69d892e729e.jpg)
+
 <h1 align="center"> Financial-Development-and-Economic-Growth </h1>
 
 <h3 align="center"> An examination of the growth-enhancing view of financial development using real world data </h3>
