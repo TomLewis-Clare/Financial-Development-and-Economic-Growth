@@ -52,5 +52,6 @@
 * Yang, F., 2018. The impact of financial development on economic growth in middle-income countries. Department of Finance and Management Science, 59(C), pp. 74-89.
 
 <h3 align="left"> Data Sources </h3>
+
 * Panel / cross-sectional data on financial development, economic growth and controlled variables from the World Bank. The data on the GNP of countries was taken from a separate area of the World Bank (The World Bank, 2019).
 * The data on the legal origins of countries are taken from the paper “What have we learned about the causes of corruption from ten years of crossnational empirical research?” by Daniel Treisman (2006).
